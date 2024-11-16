@@ -1,0 +1,47 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting App</title>
+</head>
+
+<body>
+    <h1>Greeting App</h1>
+    <div>
+        <h2 id="greeting"></h2>
+        <input type="text" id="newGreeting" placeholder="Enter new greeting" />
+        <button onclick="setGreeting()">Set Greeting</button>
+    </div>
+
+    <script>
+        async function fetchGreeting() {
+            const response = await fetch('http://localhost:3000/greeting');
+            const data = await response.json();
+            document.getElementById('greeting').innerText = data.greeting;
+        }
+
+        async function setGreeting() {
+            const newGreeting = document.getElementById('newGreeting').value;
+            const response = await fetch('http://localhost:3000/greeting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    newGreeting
+                }),
+            });
+            const data = await response.json();
+            alert(data.message);
+            fetchGreeting(); // Refresh the greeting after setting a new one
+        }
+
+        // Fetch the current greeting on page load
+        window.onload = fetchGreeting;
+    </script>
+</body>
+
+</html>
